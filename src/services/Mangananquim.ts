@@ -1,22 +1,29 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import puppeteer from "puppeteer";
+import { randomUUID } from "node:crypto";
 
 interface Manga {
+  id: string;
   name: string;
   rating: number;
   lastChapter: string;
   date: string;
+  cover: string;
+  identifier: string;
 }
 
 interface LatestManga {
+  id: string;
   name: string;
   rating: number;
   lastChapter: string;
   date: string;
+  cover: string;
 }
 
 interface MangaDetails {
+  id: string;
   title: string;
   image: string;
   rating: number;
@@ -48,21 +55,35 @@ export async function scrapeMangaPage(url: string): Promise<Manga[]> {
   const $ = cheerio.load(data);
   const mangas: Manga[] = [];
 
-  $(".page-item-detail").each((i, element) => {
+  $(".page-item-detail.manga").each((i, element) => {
+    const mangaURL = $(element).find(".item-thumb a").attr("href");
+    const identifier = mangaURL
+      ? mangaURL.split("/ler-manga/")[1].split("/")[0].replace(/-/g, " ")
+      : "";
+
     const name = $(element).find(".post-title a").text();
     const rating = parseFloat(
-      $(element).find(".post-total-rating .score").text()
+      $(element).find(".meta-item.rating .post-total-rating .score").text()
     );
     const lastChapter = $(element)
       .find(".list-chapter .chapter-item:first-child .chapter a")
       .text()
       .trim();
+    const cover = $(element).find(".item-thumb a img").attr("src") as string;
     const date = $(element)
       .find(".list-chapter .chapter-item:first-child .post-on")
       .text()
       .trim();
 
-    mangas.push({ name, rating, lastChapter, date });
+    mangas.push({
+      id: randomUUID(),
+      name,
+      rating,
+      lastChapter,
+      date,
+      cover,
+      identifier,
+    });
   });
 
   return mangas;
@@ -83,12 +104,20 @@ export async function scrapeLatestMangaPage(
     const lastChapter = $(element)
       .find(".list-chapter .chapter-item:first-child .chapter a")
       .text();
+    const cover = $(element).find(".item-thumb a img").attr("src") as any;
     const date = $(element)
       .find(".list-chapter .chapter-item:first-child .post-on")
       .text()
       .trim();
 
-    latestMangas.push({ name, rating, lastChapter, date });
+    latestMangas.push({
+      id: randomUUID(),
+      name,
+      rating,
+      lastChapter,
+      date,
+      cover,
+    });
   });
 
   return latestMangas;
@@ -157,6 +186,7 @@ export async function scrapeMangaDetailsPage(
   await browser.close();
 
   return {
+    id: randomUUID(),
     title,
     image,
     rating,

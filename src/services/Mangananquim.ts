@@ -40,12 +40,14 @@ interface MangaDetails {
 }
 
 interface Episode {
+  id: string;
   title: string;
   link: string;
   releaseDate: string;
 }
 
 interface MangaReading {
+  id: string;
   title: string;
   images: string[];
 }
@@ -58,7 +60,7 @@ export async function scrapeMangaPage(url: string): Promise<Manga[]> {
   $(".page-item-detail.manga").each((i, element) => {
     const mangaURL = $(element).find(".item-thumb a").attr("href");
     const identifier = mangaURL
-      ? mangaURL.split("/ler-manga/")[1].split("/")[0].replace(/-/g, " ")
+      ? mangaURL.split("/ler-manga/")[1].split("/")[0]
       : "";
 
     const name = $(element).find(".post-title a").text();
@@ -176,7 +178,7 @@ export async function scrapeMangaDetailsPage(
       )?.innerText.trim();
 
       if (title && link && releaseDate) {
-        episodeList.push({ title, link, releaseDate });
+        episodeList.push({ id: randomUUID(), title, link, releaseDate });
       }
     });
 
@@ -219,5 +221,5 @@ export async function scrapeMangaReadingPage(
     }
   });
 
-  return { title, images };
+  return { id: randomUUID(), title, images };
 }

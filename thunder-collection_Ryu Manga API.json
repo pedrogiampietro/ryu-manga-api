@@ -1,0 +1,59 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Ryu Manga API",
+    "collectionId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
+    "dateExported": "2024-06-01T16:33:54.454Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "d9a2a6bf-e61e-4884-a581-ba088b002d84",
+            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
+            "containerId": "",
+            "name": "Get Trendings",
+            "url": "http://localhost:3333/api/ananquim/trending",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-06-01T14:30:59.342Z",
+            "modified": "2024-06-01T16:33:28.309Z",
+            "headers": []
+        },
+        {
+            "_id": "2becf6aa-fac1-4ea3-b0d9-8ccd2ed1c07c",
+            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
+            "containerId": "",
+            "name": "Get Latest",
+            "url": "http://localhost:3333/api/ananquim/latest",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-06-01T14:36:58.194Z",
+            "modified": "2024-06-01T16:33:43.894Z",
+            "headers": []
+        },
+        {
+            "_id": "efcf01f2-1e0d-4d3c-b41b-a7e6aff74128",
+            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
+            "containerId": "",
+            "name": "Manga Details by Name",
+            "url": "http://localhost:3333/api/ananquim/manga/chainsaw-man",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2024-06-01T14:37:00.634Z",
+            "modified": "2024-06-01T16:33:42.980Z",
+            "headers": []
+        },
+        {
+            "_id": "59431407-b59a-494c-a70b-fd5180a082a6",
+            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
+            "containerId": "",
+            "name": "Read Manga",
+            "url": "http://localhost:3333/api/ananquim/manga/chainsaw-man/read",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2024-06-01T16:16:17.237Z",
+            "modified": "2024-06-01T16:33:48.912Z",
+            "headers": []
+        }
+    ],
+    "ref": "7F_C7uYuWvgQTTPzYFdxOPVJmRo2iu0fUkN_Uv_UCRYm0B53QQH-SAHNltINPj2SWTlDviDX8XiSLotwhtAXLA"
+}

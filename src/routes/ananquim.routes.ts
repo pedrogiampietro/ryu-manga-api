@@ -30,13 +30,16 @@ router.get("/manga/:name", async (req: Request, res: Response) => {
   res.json(mangaDetails);
 });
 
-router.get("/manga/:name/read", async (req: Request, res: Response) => {
-  const { name, capitulo } = req.params;
-  const mangaDetails = await scrapeMangaReadingPage(
-    `https://mangananquim.site/ler-manga/${name}/${capitulo}/?style=list`
-    // `https://mangananquim.site/ler-manga/${name}/capitulo-148-chainsaw-man/?style=list`
-  );
-  res.json(mangaDetails);
-});
+router.get(
+  "/manga/:name/:chapter/read",
+  async (req: Request, res: Response) => {
+    const { name, chapter } = req.params;
+
+    const mangaDetails = await scrapeMangaReadingPage(
+      `https://mangananquim.site/ler-manga/${name}/${chapter}/?style=list`
+    );
+    res.json(mangaDetails);
+  }
+);
 
 export default router;

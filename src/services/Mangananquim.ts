@@ -40,14 +40,12 @@ interface MangaDetails {
 }
 
 interface Episode {
-  id: string;
   title: string;
   link: string;
   releaseDate: string;
 }
 
 interface MangaReading {
-  id: string;
   title: string;
   images: string[];
 }
@@ -178,7 +176,7 @@ export async function scrapeMangaDetailsPage(
       )?.innerText.trim();
 
       if (title && link && releaseDate) {
-        episodeList.push({ id: randomUUID(), title, link, releaseDate });
+        episodeList.push({ title, link, releaseDate });
       }
     });
 
@@ -221,5 +219,5 @@ export async function scrapeMangaReadingPage(
     }
   });
 
-  return { id: randomUUID(), title, images };
+  return { title, images };
 }

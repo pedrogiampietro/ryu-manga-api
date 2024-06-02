@@ -50,7 +50,46 @@ interface MangaReading {
   images: string[];
 }
 
-export async function scrapeMangaPage(url: string): Promise<Manga[]> {
+export async function scrapeGeralMangaPage(url: string): Promise<Manga[]> {
+  const { data } = await axios.get(url);
+  const $ = cheerio.load(data);
+  const mangas: Manga[] = [];
+
+  $(".page-item-detail.manga").each((i, element) => {
+    const mangaURL = $(element).find(".item-thumb a").attr("href");
+    const identifier = mangaURL
+      ? mangaURL.split("/ler-manga/")[1].split("/")[0]
+      : "";
+
+    const name = $(element).find(".post-title a").text();
+    const rating = parseFloat(
+      $(element).find(".meta-item.rating .post-total-rating .score").text()
+    );
+    const lastChapter = $(element)
+      .find(".list-chapter .chapter-item:first-child .chapter a")
+      .text()
+      .trim();
+    const cover = $(element).find(".item-thumb a img").attr("src") as string;
+    const date = $(element)
+      .find(".list-chapter .chapter-item:first-child .post-on")
+      .text()
+      .trim();
+
+    mangas.push({
+      id: randomUUID(),
+      name,
+      rating,
+      lastChapter,
+      date,
+      cover,
+      identifier,
+    });
+  });
+
+  return mangas;
+}
+
+export async function scrapTrendingeMangaPage(url: string): Promise<Manga[]> {
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
   const mangas: Manga[] = [];

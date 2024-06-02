@@ -1,15 +1,21 @@
 import { Router, Request, Response } from "express";
 import {
+  scrapeGeralMangaPage,
   scrapeLatestMangaPage,
   scrapeMangaDetailsPage,
-  scrapeMangaPage,
+  scrapTrendingeMangaPage,
   scrapeMangaReadingPage,
 } from "../services/Mangananquim";
 
 const router = Router();
 
+router.get("/", async (req: Request, res: Response) => {
+  const mangas = await scrapeGeralMangaPage("https://mangananquim.site");
+  res.json(mangas);
+});
+
 router.get("/trending", async (req: Request, res: Response) => {
-  const mangas = await scrapeMangaPage(
+  const mangas = await scrapTrendingeMangaPage(
     "https://mangananquim.site/?m_orderby=trending"
   );
   res.json(mangas);

@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Response, NextFunction } from "express";
 import cors from "cors";
 
 import ananquimRoutes from "./routes/ananquim.routes";
@@ -7,7 +7,7 @@ import authRoutes from "./routes/auth.routes";
 const app = express();
 app.use(express.json());
 
-app.use((_, response, next) => {
+app.use((_: any, response: Response, next: NextFunction) => {
   response.header("Access-Control-Allow-Origin", "*");
   response.header(
     "Access-Control-Allow-Methods",

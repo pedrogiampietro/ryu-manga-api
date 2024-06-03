@@ -11,21 +11,21 @@ const router = Router();
 
 router.get("/", async (req: Request, res: Response) => {
   const mangas = await scrapeGeralMangaPage("https://mangananquim.site");
-  res.json(mangas);
+  return res.json(mangas);
 });
 
 router.get("/trending", async (req: Request, res: Response) => {
   const mangas = await scrapTrendingeMangaPage(
     "https://mangananquim.site/?m_orderby=trending"
   );
-  res.json(mangas);
+  return res.json(mangas);
 });
 
 router.get("/latest", async (req: Request, res: Response) => {
   const latestMangas = await scrapeLatestMangaPage(
     "https://mangananquim.site/?m_orderby=latest"
   );
-  res.json(latestMangas);
+  return res.json(latestMangas);
 });
 
 router.get("/manga/:name", async (req: Request, res: Response) => {
@@ -33,7 +33,7 @@ router.get("/manga/:name", async (req: Request, res: Response) => {
   const mangaDetails = await scrapeMangaDetailsPage(
     `https://mangananquim.site/ler-manga/${name}`
   );
-  res.json(mangaDetails);
+  return res.json(mangaDetails);
 });
 
 router.get(
@@ -44,7 +44,7 @@ router.get(
     const mangaDetails = await scrapeMangaReadingPage(
       `https://mangananquim.site/ler-manga/${name}/${chapter}/?style=list`
     );
-    res.json(mangaDetails);
+    return res.json(mangaDetails);
   }
 );
 

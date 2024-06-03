@@ -16,6 +16,7 @@ interface Manga {
 interface LatestManga {
   id: string;
   name: string;
+  identifier: string;
   rating: number;
   lastChapter: string;
   date: string;
@@ -136,6 +137,11 @@ export async function scrapeLatestMangaPage(
   const latestMangas: LatestManga[] = [];
 
   $(".page-item-detail").each((i, element) => {
+    const mangaURL = $(element).find(".item-thumb a").attr("href");
+    const identifier = mangaURL
+      ? mangaURL.split("/ler-manga/")[1].split("/")[0]
+      : "";
+
     const name = $(element).find(".post-title a").text();
     const rating = parseFloat(
       $(element).find(".post-total-rating .score").text()
@@ -151,6 +157,7 @@ export async function scrapeLatestMangaPage(
 
     latestMangas.push({
       id: randomUUID(),
+      identifier,
       name,
       rating,
       lastChapter,
@@ -194,7 +201,6 @@ export async function scrapeMangaDetailsPage(
     .trim();
   const summary = $(".description-summary .summary__content p").text().trim();
 
-  // Use puppeteer to handle dynamic content
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: "networkidle0" });

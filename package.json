@@ -1,10 +1,11 @@
 {
   "name": "ryu-manga",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "dev": "ts-node-dev --inspect --ignore-watch node_modules src/server.ts",
-    "start": "ts-node src/index.ts"
+    "start": "node dist/src/server.js",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",

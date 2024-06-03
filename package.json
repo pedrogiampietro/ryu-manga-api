@@ -1,11 +1,11 @@
 {
   "name": "ryu-manga",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "ts-node-dev --inspect --ignore-watch node_modules src/server.ts",
-    "start": "node src/server.ts",
-    "build": "tsc && npx prisma generate",
+    "build": "tsc",
+    "start": "node ./dist/server.js",
     "vercel-build": "npx prisma migrate deploy && npx prisma generate"
   },
   "keywords": [],

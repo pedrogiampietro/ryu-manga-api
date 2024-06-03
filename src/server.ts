@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import ananquimRoutes from "./routes/ananquim.routes";
+import authRoutes from "./routes/auth.routes";
 
 const app = express();
 app.use(express.json());
@@ -29,6 +30,7 @@ app.use(
 );
 
 app.use("/api/ananquim", ananquimRoutes);
+app.use("/api/auth", authRoutes);
 
 const PORT = process.env.PORT || 3333;
 

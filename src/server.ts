@@ -3,6 +3,8 @@ import cors from "cors";
 
 import ananquimRoutes from "./routes/ananquim.routes";
 import authRoutes from "./routes/auth.routes";
+import favoritesRoutes from "./routes/favorites.routes";
+import lastWatchedRoutes from "./routes/lastWatched.routes";
 
 const app = express();
 app.use(express.json());
@@ -29,8 +31,10 @@ app.use(
   })
 );
 
-app.use("/api/ananquim", ananquimRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/v1/ananquim", ananquimRoutes);
+app.use("/v1/auth", authRoutes);
+app.use("/v1/favorites", favoritesRoutes);
+app.use("/v1/lastWatched", lastWatchedRoutes);
 
 const PORT = process.env.PORT || 3333;
 

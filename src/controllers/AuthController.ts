@@ -37,6 +37,7 @@ export const login = async (request: Request, response: Response) => {
     message: "Login bem-sucedido",
     token,
     user: {
+      userId: user.id,
       name: user.name,
       email: user.email,
     },

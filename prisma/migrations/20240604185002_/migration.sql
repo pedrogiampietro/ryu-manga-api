@@ -1,8 +1,9 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -12,6 +13,7 @@ CREATE TABLE "Manga" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "link" TEXT NOT NULL,
+    "cover" TEXT NOT NULL,
 
     CONSTRAINT "Manga_pkey" PRIMARY KEY ("id")
 );
@@ -19,8 +21,9 @@ CREATE TABLE "Manga" (
 -- CreateTable
 CREATE TABLE "LastWatched" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
     "mangaId" TEXT NOT NULL,
+    "episode" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "LastWatched_pkey" PRIMARY KEY ("id")
@@ -29,7 +32,7 @@ CREATE TABLE "LastWatched" (
 -- CreateTable
 CREATE TABLE "Favorites" (
     "id" SERIAL NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
     "mangaId" TEXT NOT NULL,
 
     CONSTRAINT "Favorites_pkey" PRIMARY KEY ("id")
@@ -37,6 +40,9 @@ CREATE TABLE "Favorites" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "LastWatched_userId_mangaId_key" ON "LastWatched"("userId", "mangaId");
 
 -- AddForeignKey
 ALTER TABLE "LastWatched" ADD CONSTRAINT "LastWatched_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -201,7 +201,9 @@ export async function scrapeMangaDetailsPage(
     .trim();
   const summary = $(".description-summary .summary__content p").text().trim();
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ["--disable-setuid-sandbox", "--no-sandbox"],
+  });
   const page = await browser.newPage();
   await page.goto(url, { waitUntil: "networkidle0" });
 

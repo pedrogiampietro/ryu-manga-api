@@ -1,10 +1,12 @@
 import express, { Response, NextFunction } from "express";
 import cors from "cors";
+import path from "path";
 
 import ananquimRoutes from "./routes/ananquim.routes";
 import authRoutes from "./routes/auth.routes";
 import favoritesRoutes from "./routes/favorites.routes";
 import lastWatchedRoutes from "./routes/lastWatched.routes";
+import lerMangasRoutes from "./routes/lermangas.routes";
 
 const app = express();
 app.use(express.json());
@@ -31,7 +33,9 @@ app.use(
   })
 );
 
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 app.use("/v1/ananquim", ananquimRoutes);
+app.use("/v1/lermangas", lerMangasRoutes);
 app.use("/v1/auth", authRoutes);
 app.use("/v1/favorites", favoritesRoutes);
 app.use("/v1/lastWatched", lastWatchedRoutes);

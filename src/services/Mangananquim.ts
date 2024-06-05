@@ -344,5 +344,9 @@ export const scrapeMangaTitleEpisodesPage = async (
 
   await browser.close();
 
-  return [];
+  return {
+    id: name,
+    title,
+    episodes,
+  };
 };

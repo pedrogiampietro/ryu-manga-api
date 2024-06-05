@@ -1,5 +1,6 @@
 import express, { Response, NextFunction } from "express";
 import cors from "cors";
+import path from "path";
 
 import ananquimRoutes from "./routes/ananquim.routes";
 import authRoutes from "./routes/auth.routes";
@@ -31,6 +32,7 @@ app.use(
   })
 );
 
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
 app.use("/v1/ananquim", ananquimRoutes);
 app.use("/v1/auth", authRoutes);
 app.use("/v1/favorites", favoritesRoutes);

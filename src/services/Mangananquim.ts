@@ -203,8 +203,26 @@ export async function scrapeMangaDetailsPage(
 
   const browser = await puppeteer.launch({
     args: ["--disable-setuid-sandbox", "--no-sandbox"],
+    headless: true,
+    userDataDir: "./user_data",
   });
+
   const page = await browser.newPage();
+
+  // Desativar o download de imagens e CSS
+  await page.setRequestInterception(true);
+  page.on("request", (req) => {
+    if (
+      req.resourceType() === "stylesheet" ||
+      req.resourceType() === "font" ||
+      req.resourceType() === "image"
+    ) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+
   await page.goto(url, { waitUntil: "networkidle0" });
 
   const episodes = await page.evaluate(() => {

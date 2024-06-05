@@ -7,15 +7,45 @@ const prisma = new PrismaClient();
 
 export const register = async (request: Request, response: Response) => {
   const { name, email, password } = request.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: email,
     },
   });
-  response.json(user);
+
+  if (existingUser) {
+    return response.status(400).json({
+      status: "error",
+      message: "O email já está em uso. Por favor, use um email diferente.",
+    });
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    return response.json({
+      status: "success",
+      message: "Usuário registrado com sucesso!",
+      user,
+    });
+  } catch (error) {
+    console.error("Erro ao criar usuário", error);
+
+    return response.status(500).json({
+      status: "error",
+      message:
+        "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.",
+    });
+  }
 };
 
 export const login = async (request: Request, response: Response) => {

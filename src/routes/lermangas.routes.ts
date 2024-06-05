@@ -10,7 +10,10 @@ const router = Router();
 
 router.get("/trending", async (req: Request, res: Response) => {
   const mangas = await scrapTrendingeMangaPage("https://lermangas.me");
-  return res.json(mangas);
+  if (!mangas) {
+    return res.status(204).send();
+  }
+  return res.status(200).json(mangas);
 });
 
 router.get("/manga/:name", async (req: Request, res: Response) => {
@@ -18,7 +21,10 @@ router.get("/manga/:name", async (req: Request, res: Response) => {
   const mangaDetails = await scrapeMangaDetailsPage(
     `https://lermangas.me/manga/${name}`
   );
-  return res.json(mangaDetails);
+  if (!mangaDetails) {
+    return res.status(204).send();
+  }
+  return res.status(200).json(mangaDetails);
 });
 
 router.get(
@@ -29,7 +35,10 @@ router.get(
     const mangaDetails = await scrapeMangaReadingPage(
       `https://lermangas.me/manga/${name}/${chapter}`
     );
-    return res.json(mangaDetails);
+    if (!mangaDetails) {
+      return res.status(204).send();
+    }
+    return res.status(200).json(mangaDetails);
   }
 );
 

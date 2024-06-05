@@ -1,59 +1,149 @@
 {
     "clientName": "Thunder Client",
     "collectionName": "Ryu Manga API",
-    "collectionId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
-    "dateExported": "2024-06-01T16:33:54.454Z",
+    "collectionId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+    "dateExported": "2024-06-05T14:58:52.296Z",
     "version": "1.2",
-    "folders": [],
+    "folders": [
+        {
+            "_id": "c4a98670-46c1-408e-afb2-ebae89ed3333",
+            "name": "Auth",
+            "containerId": "",
+            "created": "2024-06-05T14:48:02.533Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "cbf391cb-59f3-4526-8c85-9488797bb73e",
+            "name": "Favorites",
+            "containerId": "",
+            "created": "2024-06-05T14:55:15.121Z",
+            "sortNum": 15000
+        },
+        {
+            "_id": "23b9aa36-4cf2-4a5a-8485-7f06b4506377",
+            "name": "Nanquim",
+            "containerId": "",
+            "created": "2024-06-05T14:48:13.005Z",
+            "sortNum": 20000
+        }
+    ],
     "requests": [
         {
-            "_id": "d9a2a6bf-e61e-4884-a581-ba088b002d84",
-            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
-            "containerId": "",
+            "_id": "87c56fc7-eb83-4e56-84a7-28d5d907e2e3",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "23b9aa36-4cf2-4a5a-8485-7f06b4506377",
             "name": "Get Trendings",
             "url": "http://localhost:3333/api/ananquim/trending",
             "method": "GET",
             "sortNum": 10000,
-            "created": "2024-06-01T14:30:59.342Z",
-            "modified": "2024-06-01T16:33:28.309Z",
+            "created": "2024-06-05T14:47:43.670Z",
+            "modified": "2024-06-05T14:47:43.670Z",
             "headers": []
         },
         {
-            "_id": "2becf6aa-fac1-4ea3-b0d9-8ccd2ed1c07c",
-            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
-            "containerId": "",
+            "_id": "c48245b1-f99a-42e1-9796-e42b8199b66a",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "c4a98670-46c1-408e-afb2-ebae89ed3333",
+            "name": "Register",
+            "url": "http://localhost:3333/v1/auth/register",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-06-05T14:48:41.214Z",
+            "modified": "2024-06-05T14:50:21.937Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Ryu Dev\",\n  \"email\": \"ryu@dev.com\",\n  \"password\": \"secret\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "04a71168-2d82-46bc-9bf5-4d70218503c7",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "cbf391cb-59f3-4526-8c85-9488797bb73e",
+            "name": "Add Manga Favorites User",
+            "url": "http://localhost:3333/v1/favorites",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-06-05T14:55:15.121Z",
+            "modified": "2024-06-05T14:58:44.500Z",
+            "headers": [
+                {
+                    "name": "userId",
+                    "value": "uuid"
+                }
+            ]
+        },
+        {
+            "_id": "828e17b7-d191-485e-9ea2-4f404bf52067",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "23b9aa36-4cf2-4a5a-8485-7f06b4506377",
             "name": "Get Latest",
             "url": "http://localhost:3333/api/ananquim/latest",
             "method": "GET",
             "sortNum": 20000,
-            "created": "2024-06-01T14:36:58.194Z",
-            "modified": "2024-06-01T16:33:43.894Z",
+            "created": "2024-06-05T14:47:43.672Z",
+            "modified": "2024-06-05T14:47:43.672Z",
             "headers": []
         },
         {
-            "_id": "efcf01f2-1e0d-4d3c-b41b-a7e6aff74128",
-            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
-            "containerId": "",
+            "_id": "53d88990-cf13-4314-9932-67a28e7dd9ab",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "c4a98670-46c1-408e-afb2-ebae89ed3333",
+            "name": "Login",
+            "url": "http://localhost:3333/v1/auth/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-05T14:52:24.438Z",
+            "modified": "2024-06-05T14:52:34.619Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"ryu@dev.com\",\n  \"password\": \"secret\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "ecef02f6-e477-4db5-93d9-676fe670de74",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "cbf391cb-59f3-4526-8c85-9488797bb73e",
+            "name": "Get All Favorites",
+            "url": "http://localhost:3333/v1/auth/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-06-05T14:55:15.122Z",
+            "modified": "2024-06-05T14:55:15.121Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"ryu@dev.com\",\n  \"password\": \"secret\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "5880bfbd-0e5d-4d08-9630-36d466e948ab",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "23b9aa36-4cf2-4a5a-8485-7f06b4506377",
             "name": "Manga Details by Name",
             "url": "http://localhost:3333/api/ananquim/manga/chainsaw-man",
             "method": "GET",
             "sortNum": 30000,
-            "created": "2024-06-01T14:37:00.634Z",
-            "modified": "2024-06-01T16:33:42.980Z",
+            "created": "2024-06-05T14:47:43.673Z",
+            "modified": "2024-06-05T14:47:43.673Z",
             "headers": []
         },
         {
-            "_id": "59431407-b59a-494c-a70b-fd5180a082a6",
-            "colId": "75e92ee2-01b1-469c-8e98-cecc2de2ab34",
-            "containerId": "",
+            "_id": "d128a1d0-1fe6-47b6-bcd1-9a6b31496163",
+            "colId": "4849d6f6-997e-4050-80d3-47e131dc6f55",
+            "containerId": "23b9aa36-4cf2-4a5a-8485-7f06b4506377",
             "name": "Read Manga",
             "url": "http://localhost:3333/api/ananquim/manga/chainsaw-man/read",
             "method": "GET",
             "sortNum": 40000,
-            "created": "2024-06-01T16:16:17.237Z",
-            "modified": "2024-06-01T16:33:48.912Z",
+            "created": "2024-06-05T14:47:43.674Z",
+            "modified": "2024-06-05T14:47:43.674Z",
             "headers": []
         }
     ],
-    "ref": "7F_C7uYuWvgQTTPzYFdxOPVJmRo2iu0fUkN_Uv_UCRYm0B53QQH-SAHNltINPj2SWTlDviDX8XiSLotwhtAXLA"
+    "ref": "wQw2F5z0Yak2Frfs8XSZgX5lbgcP1T_3YpUKDFWck2U2X_RDC3hDdYDIV8WNCpdxsw6-C11QG_s2hVM2jBxH8g"
 }

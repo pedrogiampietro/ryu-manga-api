@@ -204,7 +204,7 @@ export async function scrapeMangaDetailsPage(
   const browser = await puppeteer.launch({
     args: ["--disable-setuid-sandbox", "--no-sandbox"],
     headless: true,
-    userDataDir: "./user_data",
+    // userDataDir: "./user_data",
   });
 
   const page = await browser.newPage();
@@ -286,3 +286,63 @@ export async function scrapeMangaReadingPage(
 
   return { title, images };
 }
+
+export const scrapeMangaTitleEpisodesPage = async (
+  url: string,
+  name: string
+): Promise<any> => {
+  const { data } = await axios.get(url);
+  const $ = cheerio.load(data);
+
+  const title = $(".post-title h1").text().trim();
+
+  const browser = await puppeteer.launch({
+    args: ["--disable-setuid-sandbox", "--no-sandbox"],
+    headless: true,
+  });
+
+  const page = await browser.newPage();
+
+  // Desativar o download de imagens e CSS
+  await page.setRequestInterception(true);
+  page.on("request", (req) => {
+    if (
+      req.resourceType() === "stylesheet" ||
+      req.resourceType() === "font" ||
+      req.resourceType() === "image"
+    ) {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+
+  await page.goto(url, { waitUntil: "networkidle0" });
+
+  const episodes = await page.evaluate(() => {
+    const episodeElements = document.querySelectorAll(
+      "ul.main.version-chap li.wp-manga-chapter"
+    );
+    const episodeList: Episode[] = [];
+
+    episodeElements.forEach((element) => {
+      const title = (
+        element.querySelector("a") as HTMLElement
+      )?.innerText.trim();
+      const link = (element.querySelector("a") as HTMLAnchorElement)?.href;
+      const releaseDate = (
+        element.querySelector(".chapter-release-date i") as HTMLElement
+      )?.innerText.trim();
+
+      if (title && link && releaseDate) {
+        episodeList.push({ title, link, releaseDate });
+      }
+    });
+
+    return episodeList;
+  });
+
+  await browser.close();
+
+  return [];
+};

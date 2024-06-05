@@ -44,7 +44,6 @@ export const addFavorite = async (request: Request, response: Response) => {
         });
       }
 
-      // Verifica se o mangá já foi favoritado
       const existingFavorite = await prisma.favorites.findMany({
         where: {
           userId: userId,
@@ -52,7 +51,6 @@ export const addFavorite = async (request: Request, response: Response) => {
         },
       });
 
-      // Se o mangá já foi favoritado, retorna um erro
       if (existingFavorite.length > 0) {
         return response.status(400).json({ error: "Mangá já foi favoritado" });
       }

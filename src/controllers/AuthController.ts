@@ -61,6 +61,7 @@ export const login = async (request: Request, response: Response) => {
       .status(400)
       .json({ status: "error", message: "Senha incorreta" });
   }
+
   const token = jwt.sign({ id: user.id }, "your_jwt_secret");
   response.json({
     status: "success",
@@ -70,6 +71,11 @@ export const login = async (request: Request, response: Response) => {
       userId: user.id,
       name: user.name,
       email: user.email,
+      username: user.username,
+      birthDate: user.birthDate,
+      urls: user.urls,
+      bio: user.bio,
+      theme: user.theme,
     },
   });
 };

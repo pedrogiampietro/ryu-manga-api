@@ -13,6 +13,13 @@ model User {
   name        String
   email       String        @unique
   password    String
+  username    String?
+  bio         String?
+  urls        String[]
+  birthDate   DateTime?
+  language    String?
+  font        String?
+  theme       String?
   lastWatched LastWatched[]
   favorites   Favorites[]
 }

@@ -7,7 +7,17 @@ import path from "path";
 const prisma = new PrismaClient();
 
 export const saveLastRead = async (request: Request, response: Response) => {
-  const { userId, mangaId, cover, title, episodio } = request.body;
+  const {
+    userId,
+    mangaId,
+    cover,
+    title,
+    episodio,
+    currentEpisode,
+    totalEpisodes,
+  } = request.body;
+
+  const progress = (Number(currentEpisode) / Number(totalEpisodes)) * 100;
 
   const dirPath = path.join(__dirname, "../../uploads").replace(/\\/g, "/");
 
@@ -25,13 +35,13 @@ export const saveLastRead = async (request: Request, response: Response) => {
       writer.on("finish", resolve);
       writer.on("error", reject);
     }).then(async () => {
+      const dbPath = `uploads/${mangaId}.png`;
+
       let manga = await prisma.manga.findUnique({
         where: {
           id: mangaId,
         },
       });
-
-      const dbPath = `uploads/${mangaId}.png`;
 
       if (!manga) {
         manga = await prisma.manga.create({
@@ -40,10 +50,10 @@ export const saveLastRead = async (request: Request, response: Response) => {
             title,
             link: "",
             cover: dbPath,
+            points: 0,
           },
         });
       } else {
-        // Atualize a capa do mangá se ele já existir
         manga = await prisma.manga.update({
           where: {
             id: mangaId,
@@ -63,7 +73,11 @@ export const saveLastRead = async (request: Request, response: Response) => {
         },
       });
 
+      let incrementalProgress = 0;
+
       if (lastRead) {
+        incrementalProgress = progress - lastRead.progress;
+
         lastRead = await prisma.lastWatched.update({
           where: {
             id: lastRead.id,
@@ -71,14 +85,41 @@ export const saveLastRead = async (request: Request, response: Response) => {
           data: {
             date: new Date(),
             episode: episodio,
+            progress: progress,
+            previousProgress: lastRead.progress,
           },
         });
       } else {
+        incrementalProgress = progress;
+
         lastRead = await prisma.lastWatched.create({
           data: {
             userId: userId,
             mangaId: manga.id,
             episode: episodio,
+            progress: progress,
+            previousProgress: 0,
+          },
+        });
+      }
+
+      let user = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+
+      if (!user) {
+        response.status(404).json({ error: "Usuário não encontrado" });
+      } else {
+        const points = Math.floor(incrementalProgress);
+
+        user = await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            points: user.points + points,
           },
         });
       }

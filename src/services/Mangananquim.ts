@@ -245,7 +245,7 @@ export async function scrapeMangaDetailsPage(
       const episodeElements = document.querySelectorAll(
         "ul.main.version-chap li.wp-manga-chapter"
       );
-      const episodeList: Episode[] = [];
+      let episodeList: Episode[] = [];
 
       episodeElements.forEach((element) => {
         const title = (
@@ -261,10 +261,17 @@ export async function scrapeMangaDetailsPage(
         }
       });
 
+      // Filtrar episódios que têm "_1" no link
+      episodeList = episodeList.filter(
+        (episode) => !episode.link.includes("_1")
+      );
+
       return episodeList;
     });
 
     await browser.close();
+
+    console.log("episodes", episodes);
 
     return episodes.length > 0
       ? {

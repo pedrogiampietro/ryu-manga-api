@@ -8,6 +8,7 @@ import favoritesRoutes from "./routes/favorites.routes";
 import lastWatchedRoutes from "./routes/lastWatched.routes";
 import lerMangasRoutes from "./routes/lermangas.routes";
 import userRoutes from "./routes/user.routes";
+import rankingRoutes from "./routes/ranking.routes";
 
 const app = express();
 app.use(express.json());
@@ -41,6 +42,7 @@ app.use("/v1/auth", authRoutes);
 app.use("/v1/user", userRoutes);
 app.use("/v1/favorites", favoritesRoutes);
 app.use("/v1/lastWatched", lastWatchedRoutes);
+app.use("/v1/ranking", rankingRoutes);
 
 const PORT = process.env.PORT || 3333;
 

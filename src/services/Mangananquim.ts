@@ -271,8 +271,6 @@ export async function scrapeMangaDetailsPage(
 
     await browser.close();
 
-    console.log("episodes", episodes);
-
     return episodes.length > 0
       ? {
           id: randomUUID(),

@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import fs from "fs";
+import path from "path";
 
 const prisma = new PrismaClient();
 
 export const updateUser = async (request: Request, response: Response) => {
-  const { name, birthDate, username, email, bio, urls, theme, font, userId } =
+  const { name, birthDate, username, email, bio, theme, font, userId } =
     request.body;
+  const photo = request.file;
 
   const data: { [key: string]: any } = {};
 
@@ -14,9 +17,33 @@ export const updateUser = async (request: Request, response: Response) => {
   if (username) data.username = username;
   if (email) data.email = email;
   if (bio) data.bio = bio;
-  if (urls) data.urls = urls;
   if (theme) data.theme = theme;
   if (font) data.font = font;
+
+  if (photo) {
+    const avatarUrl = `http://${request.headers.host}/uploads/avatars/${photo.filename}`;
+    data.avatar = avatarUrl;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (existingUser?.avatar) {
+      const oldAvatarFilename = path.basename(existingUser.avatar);
+      const oldAvatarPath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "uploads",
+        "avatars",
+        oldAvatarFilename
+      );
+
+      if (fs.existsSync(oldAvatarPath)) {
+        fs.unlinkSync(oldAvatarPath);
+      }
+    }
+  }
 
   try {
     const user = await prisma.user.update({
@@ -35,6 +62,7 @@ export const updateUser = async (request: Request, response: Response) => {
         theme: true,
         lastWatched: true,
         favorites: true,
+        avatar: true,
       },
     });
 

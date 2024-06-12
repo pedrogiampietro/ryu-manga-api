@@ -15,6 +15,7 @@ model User {
   password    String
   username    String?
   bio         String?
+  avatar      String?
   urls        String[]
   birthDate   DateTime?
   language    String?

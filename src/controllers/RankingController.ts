@@ -15,7 +15,7 @@ export const highscoresStats = async (request: Request, response: Response) => {
       id: index + 1,
       name: user.name,
       score: user.points,
-      avatar: `https://github.com/${user.username}.png`,
+      avatar: user.avatar,
     }));
 
     return response.json({

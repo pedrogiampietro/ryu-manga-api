@@ -77,6 +77,7 @@ export const login = async (request: Request, response: Response) => {
       bio: user.bio,
       theme: user.theme,
       points: user.points,
+      avatar: user.avatar,
     },
   });
 };

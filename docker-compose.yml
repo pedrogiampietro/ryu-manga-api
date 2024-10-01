@@ -1,25 +1,37 @@
-version: "3.3"
-
 services:
   postgres:
-    container_name: ryu-api
-    image: postgres
+    container_name: ryu-api-postgres
+    image: postgres:latest
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
     volumes:
-      - pgdata:/data/postgres
+      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
-      - postgres
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    container_name: ryu-api-redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redisdata:/data
+    command: ["redis-server", "--appendonly", "yes"]
     restart: unless-stopped
 
 networks:
-  postgres:
+  app-network:
     driver: bridge
 
 volumes:
   pgdata:
+    driver: local
+  redisdata:
     driver: local

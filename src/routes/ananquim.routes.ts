@@ -7,6 +7,7 @@ import {
   scrapeMangaReadingPage,
   scrapeMangaTitleEpisodesPage,
 } from "../services/Mangananquim";
+import cacheMiddleware, { redisClient } from "../middlewares/cache-redis";
 
 const router = Router();
 
@@ -38,17 +39,33 @@ router.get("/latest", async (req: Request, res: Response) => {
   return res.status(200).json(latestMangas);
 });
 
-router.get("/manga/:name", async (req: Request, res: Response) => {
-  const { name } = req.params;
-  const mangaDetails = await scrapeMangaDetailsPage(
-    `https://mangananquim.site/ler-manga/${name}`
-  );
-  if (!mangaDetails) {
-    return res.status(204).send();
-  }
-  return res.status(200).json(mangaDetails);
-});
+router.get(
+  "/manga/:name",
+  cacheMiddleware,
+  async (req: Request, res: Response) => {
+    const { name } = req.params;
 
+    try {
+      const mangaDetails = await scrapeMangaDetailsPage(
+        `https://mangananquim.site/ler-manga/${name}`
+      );
+
+      if (!mangaDetails) {
+        return res.status(204).send();
+      }
+
+      // Armazena os dados no Redis com expiração de 1 hora
+      await redisClient.setEx(name, 3600, JSON.stringify(mangaDetails));
+
+      return res.status(200).json(mangaDetails);
+    } catch (error) {
+      console.error("Erro ao buscar os detalhes do mangá:", error);
+      return res
+        .status(500)
+        .json({ message: "Erro ao buscar os detalhes do mangá" });
+    }
+  }
+);
 router.get(
   "/manga/:name/:chapter/read",
   async (req: Request, res: Response) => {

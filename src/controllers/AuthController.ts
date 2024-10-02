@@ -50,13 +50,20 @@ export const register = async (request: Request, response: Response) => {
 
 export const login = async (request: Request, response: Response) => {
   const { email, password } = request.body;
+
+  if (!password) {
+    return response
+      .status(400)
+      .json({ status: "error", message: "missing body" });
+  }
+
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
     return response
       .status(400)
       .json({ status: "error", message: "Usuário não encontrado" });
   }
-  if (!(await bcrypt.compare(password, user.password))) {
+  if (!(await bcrypt.compare(password, user.password as string))) {
     return response
       .status(400)
       .json({ status: "error", message: "Senha incorreta" });

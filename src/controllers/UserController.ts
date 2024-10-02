@@ -81,3 +81,44 @@ export const updateUser = async (request: Request, response: Response) => {
     });
   }
 };
+
+export const syncUser = async (req: Request, res: Response) => {
+  const { id, email, name, avatar } = req.body;
+
+  if (!id || !email) {
+    return res.status(400).json({ error: "ID e email são obrigatórios" });
+  }
+
+  try {
+    // Tenta encontrar o usuário no banco de dados pelo ID
+    let user = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      // Se o usuário não existir, cria um novo
+      user = await prisma.user.create({
+        data: {
+          id,
+          email,
+          name,
+          avatar,
+        },
+      });
+    } else {
+      // Se o usuário já existir, atualiza as informações
+      user = await prisma.user.update({
+        where: { id },
+        data: {
+          name,
+          avatar,
+        },
+      });
+    }
+
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Erro ao sincronizar o usuário" });
+  }
+};

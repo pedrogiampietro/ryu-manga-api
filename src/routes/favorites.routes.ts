@@ -4,11 +4,12 @@ import {
   getFavorites,
   deleteFavorite,
 } from "../controllers/FavoritesController";
+import { authMiddleware } from "../middlewares/auth";
 
 const router = express.Router();
 
-router.post("/", addFavorite);
-router.get("/", getFavorites);
-router.delete("/", deleteFavorite);
+router.post("/", authMiddleware, addFavorite);
+router.get("/", authMiddleware, getFavorites);
+router.delete("/", authMiddleware, deleteFavorite);
 
 export default router;

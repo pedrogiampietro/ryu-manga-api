@@ -6,8 +6,13 @@ import path from "path";
 
 const prisma = new PrismaClient();
 
-export const addFavorite = async (request: Request, response: Response) => {
-  const { userId, mangaId, title, cover } = request.body;
+export const addFavorite = async (req: any, res: Response) => {
+  const { mangaId, title, cover } = req.body;
+  const userId = req.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: "userId ausente" });
+  }
 
   const dirPath = path.join(__dirname, "../../uploads").replace(/\\/g, "/");
 
@@ -52,7 +57,7 @@ export const addFavorite = async (request: Request, response: Response) => {
       });
 
       if (existingFavorite.length > 0) {
-        return response.status(400).json({ error: "Mangá já foi favoritado" });
+        return res.status(400).json({ error: "Mangá já foi favoritado" });
       }
 
       const favorite = await prisma.favorites.create({
@@ -62,16 +67,16 @@ export const addFavorite = async (request: Request, response: Response) => {
         },
       });
 
-      response.status(201).json(favorite);
+      res.status(201).json(favorite);
     });
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: "Algo deu errado" });
+    res.status(500).json({ error: "Algo deu errado" });
   }
 };
 
-export const getFavorites = async (request: Request, response: Response) => {
-  const { userId } = request.params;
+export const getFavorites = async (req: any, res: Response) => {
+  const userId = req.userId;
 
   try {
     const favorites = await prisma.favorites.findMany({
@@ -83,18 +88,19 @@ export const getFavorites = async (request: Request, response: Response) => {
       },
     });
 
-    response.json(favorites);
+    res.json(favorites);
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: "Algo deu errado" });
+    res.status(500).json({ error: "Algo deu errado" });
   }
 };
 
-export const deleteFavorite = async (request: Request, response: Response) => {
-  const { userId, mangaId } = request.query;
+export const deleteFavorite = async (req: any, res: Response) => {
+  const { mangaId } = req.query;
+  const userId = req.userId;
 
-  if (typeof userId !== "string" || typeof mangaId !== "string") {
-    return response.status(400).json({ error: "userId deve ser uma string" });
+  if (typeof mangaId !== "string") {
+    return res.status(400).json({ error: "mangaId deve ser uma string" });
   }
 
   try {
@@ -106,9 +112,7 @@ export const deleteFavorite = async (request: Request, response: Response) => {
     });
 
     if (!favorite) {
-      return response
-        .status(404)
-        .json({ error: "Mangá favorito não encontrado" });
+      return res.status(404).json({ error: "Mangá favorito não encontrado" });
     }
 
     await prisma.favorites.delete({
@@ -117,9 +121,9 @@ export const deleteFavorite = async (request: Request, response: Response) => {
       },
     });
 
-    response.status(204).send();
+    res.status(204).send();
   } catch (error) {
     console.error(error);
-    response.status(500).json({ error: "Algo deu errado" });
+    res.status(500).json({ error: "Algo deu errado" });
   }
 };

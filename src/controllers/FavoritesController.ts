@@ -10,8 +10,8 @@ export const addFavorite = async (req: any, res: Response) => {
   const { mangaId, title, cover } = req.body;
   const userId = req.userId;
 
-  if (!userId) {
-    return res.status(400).json({ error: "userId ausente" });
+  if (!userId || !mangaId || !title || !cover) {
+    return res.status(400).json({ error: "Campos necessários ausentes." });
   }
 
   const dirPath = path.join(__dirname, "../../uploads").replace(/\\/g, "/");
@@ -26,51 +26,50 @@ export const addFavorite = async (req: any, res: Response) => {
     const writer = fs.createWriteStream(imagePath);
     result.data.pipe(writer);
 
-    return new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       writer.on("finish", resolve);
       writer.on("error", reject);
-    }).then(async () => {
-      let manga = await prisma.manga.findUnique({
-        where: {
-          id: mangaId,
-        },
-      });
-
-      const dbPath = `uploads/${mangaId}.png`;
-
-      if (!manga) {
-        manga = await prisma.manga.create({
-          data: {
-            id: mangaId,
-            title: title,
-            link: mangaId,
-            cover: dbPath,
-          },
-        });
-      }
-
-      const existingFavorite = await prisma.favorites.findMany({
-        where: {
-          userId: userId,
-          mangaId: manga.id,
-        },
-      });
-
-      if (existingFavorite.length > 0) {
-        return res.status(400).json({ error: "Mangá já foi favoritado" });
-      }
-
-      const favorite = await prisma.favorites.create({
-        data: {
-          userId,
-          mangaId: manga.id,
-        },
-      });
-
-      res.status(201).json(favorite);
     });
-  } catch (error) {
+
+    let manga = await prisma.manga.findUnique({
+      where: { id: mangaId },
+    });
+
+    const dbPath = `uploads/${mangaId}.png`;
+
+    if (!manga) {
+      manga = await prisma.manga.create({
+        data: {
+          id: mangaId,
+          title: title,
+          link: mangaId,
+          cover: dbPath,
+        },
+      });
+    }
+
+    const existingFavorite = await prisma.favorites.findUnique({
+      where: { identifier: title },
+    });
+
+    if (existingFavorite) {
+      return res.status(400).json({ error: "Identifier já existe" });
+    }
+
+    const favorite = await prisma.favorites.create({
+      data: {
+        userId,
+        mangaId,
+        identifier: title,
+      },
+    });
+
+    res.status(201).json(favorite);
+  } catch (error: any) {
     console.error(error);
+    if (error.code === "P2002") {
+      return res.status(400).json({ error: "Mangá já foi favoritado" });
+    }
     res.status(500).json({ error: "Algo deu errado" });
   }
 };
@@ -96,18 +95,18 @@ export const getFavorites = async (req: any, res: Response) => {
 };
 
 export const deleteFavorite = async (req: any, res: Response) => {
-  const { mangaId } = req.query;
+  const { identifier } = req.body;
   const userId = req.userId;
 
-  if (typeof mangaId !== "string") {
-    return res.status(400).json({ error: "mangaId deve ser uma string" });
+  if (typeof identifier !== "string") {
+    return res.status(400).json({ error: "identifier deve ser uma string" });
   }
 
   try {
     const favorite = await prisma.favorites.findFirst({
       where: {
         userId: userId,
-        mangaId: mangaId,
+        identifier: identifier,
       },
     });
 
@@ -117,7 +116,7 @@ export const deleteFavorite = async (req: any, res: Response) => {
 
     await prisma.favorites.delete({
       where: {
-        id: favorite.id,
+        identifier: favorite.identifier,
       },
     });
 

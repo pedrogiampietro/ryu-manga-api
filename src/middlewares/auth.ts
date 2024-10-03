@@ -16,8 +16,10 @@ export const authMiddleware = async (
 
   const { data, error } = await supabase.auth.getUser(token);
 
-  if (error || !data) {
-    return res.status(401).json({ error: "Token inválido" });
+  if (error || !data || !data.user) {
+    return res
+      .status(401)
+      .json({ error: "Token inválido", details: error?.message });
   }
 
   req.userId = data.user.id;

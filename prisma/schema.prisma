@@ -51,9 +51,12 @@ model LastWatched {
 }
 
 model Favorites {
-  id      Int    @id @default(autoincrement())
-  userId  String
-  mangaId String
-  user    User   @relation(fields: [userId], references: [id])
-  manga   Manga  @relation(fields: [mangaId], references: [id])
+  id         Int    @id @default(autoincrement())
+  userId     String
+  mangaId    String
+  identifier String @unique
+  user       User   @relation(fields: [userId], references: [id])
+  manga      Manga  @relation(fields: [mangaId], references: [id])
+
+  @@unique([userId, mangaId])
 }

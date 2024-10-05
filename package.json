@@ -4,7 +4,7 @@
   "main": "src/server.ts",
   "scripts": {
     "dev": "ts-node-dev --inspect --ignore-watch node_modules src/server.ts",
-    "build": "tsc",
+    "build": "npx prisma db push && npx prisma generate && tsc",
     "start": "node ./dist/server.js",
     "vercel-build": "npx prisma migrate deploy && npx prisma generate"
   },
